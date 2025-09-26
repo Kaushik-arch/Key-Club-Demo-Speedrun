@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Middleton Key Club</title>
+<style>
+/* General */
+body {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #0b1d51; /* initial navy blue background */
+    color: #1f2937;
+    transition: background 1s ease-in-out;
+}
+
+/* Top-left text */
+.top-left {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Letter container */
+.letter-container {
+    width: 80%;
+    max-width: 600px;
+    aspect-ratio: 3/2;
+    background: #facc15; /* yellow envelope */
+    border-radius: 1rem;
+    margin: 6rem auto 2rem auto;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    perspective: 1000px;
+    transition: transform 0.6s ease;
+}
+
+/* Flap animation */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: #eab308;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    transform-origin: top;
+    transition: transform 1s ease-in-out;
+    box-shadow: inset 0 -4px 10px rgba(0,0,0,0.2);
+}
+.flap.open { transform: rotateX(-180deg); }
+
+/* Wax seal button */
+.wax-seal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform 0.3s ease;
+}
+.wax-seal:hover { transform: translate(-50%, -50%) scale(1.1); }
+.wax-seal svg { width: 100%; height: 100%; }
+.wax-seal span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Papers container */
+.papers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    transition: all 1s ease-in-out;
+    margin-top: 2rem;
+}
+.papers-container.revealed { opacity: 1; }
+
+/* Individual paper tabs */
+.paper-tab {
+    width: 90%;
+    max-width: 600px;
+    background: #fef3c7; /* lighter yellow for papers */
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.7s ease-out, opacity 0.7s ease-out, box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+.paper-tab:hover {
+    transform: translateY(-5px) scale(1.02) rotate(-0.5deg);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+.paper-tab.visible { transform: translateY(0); opacity: 1; }
+
+/* Title */
+.regal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transition: opacity 1s ease, transform 0.5s ease;
+}
+.regal-title.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="top-left">kaushik built ts</div>
+
+<!-- Letter -->
+<div class="letter-container" id="letterArea">
+    <div class="flap" id="flap"></div>
+    <button id="sealButton" class="wax-seal">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="wax-gradient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:#b91c1c; stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#991b1b; stop-opacity:1"/>
+                </radialGradient>
+            </defs>
+            <circle cx="100" cy="100" r="90" fill="url(#wax-gradient)" stroke="#ef4444" stroke-width="5"/>
+        </svg>
+        <span>Click Here</span>
+    </button>
+</div>
+
+<!-- Papers -->
+<div class="papers-container" id="papersContainer">
+    <h1 class="regal-title" id="clubTitle">Middleton Key Club</h1>
+    <div class="paper-tab"><h2>Welcome</h2><p>Welcome to Middleton Key Club!</p></div>
+    <div class="paper-tab"><h2>About Us</h2><p>We serve our community and Inspire members ig.</p></div>
+    <div class="paper-tab"><h2>Events</h2><p>Weekly meet once a month at Calhouns class.</p></div>
+    <div class="paper-tab"><h2>Service Hours</h2><p>Log your hours using the form.</p></div>
+    <div class="paper-tab"><h2>Contact</h2><p>Reach us via Telegram or email.</p></div>
+</div>
+
+<script>
+const sealButton = document.getElementById('sealButton');
+const flap = document.getElementById('flap');
+const letterArea = document.getElementById('letterArea');
+const papersContainer = document.getElementById('papersContainer');
+const paperTabs = document.querySelectorAll('.paper-tab');
+const clubTitle = document.getElementById('clubTitle');
+
+sealButton.addEventListener('click', ()=>{
+    // Open flap animation
+    flap.classList.add('open');
+    sealButton.style.opacity='0';
+    sealButton.style.transform='translate(-50%, -50%) scale(0.5) rotate(180deg)';
+
+    setTimeout(()=>{
+        // Hide the envelope
+        sealButton.style.display='none';
+        letterArea.style.display='none';
+        // Reveal papers
+        papersContainer.classList.add('revealed');
+        clubTitle.classList.add('visible');
+        paperTabs.forEach((tab,index)=>setTimeout(()=>tab.classList.add('visible'), index*200));
+        // Change background to crowd image
+        document.body.style.background = "url('crowd.jpg') no-repeat center center fixed";
+        document.body.style.backgroundSize = "cover";
+    },1000);
+});
+</script>
+</body>
+</html>
